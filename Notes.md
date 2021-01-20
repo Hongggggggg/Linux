@@ -54,7 +54,7 @@
 
   - 查找目录及文件
 
-    - 查看当前目录下文件个数：
+    - 查看当前目录下文件个数 ./指当前目录，wc为统计指定文件中的字节数、字数、行数，-l为行数：
 
       ```bash
       $find ./ | wc -l
@@ -66,6 +66,12 @@
 
       ```bash
       cat -n filename
+      ```
+
+    - 一页一页查看文件
+
+      ```bash
+      more filename
       ```
 
     - 只看前10行：
@@ -80,4 +86,29 @@
       tail -5 filename
       ```
 
+    - 查找file中匹配的内容
       
+      ```bash
+      egrep *** filename
+      ```
+
+  - 文件与目录权限修改: 
+    
+    - 改变文件的拥有者 chown
+    - 改变文件读写执行等属性 chmod
+    
+  - 重定向>  >>:
+  
+    - 覆盖内容>:
+    
+      ```bash
+      echo "abcd" > filename
+      ```
+      
+    - 追加内容>>:
+      
+      ```bash
+      echo "abcd" >> filename
+      ```
+  
+- 管道命令：
