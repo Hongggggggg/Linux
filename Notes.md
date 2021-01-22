@@ -179,3 +179,129 @@
           ```bash
           cat > out.txt < test.txt
           ```
+
+
+
+- 文本处理
+
+  - find文件查找：待更新
+
+  - grep文本搜索：
+
+    查找指定目录/etc/acpi 及其子目录（如果存在子目录的话）下所有文件中包含字符串"update"的文件
+
+    ```bash
+    grep -r update /etc/acpi
+    ```
+
+  - wc统计行和字符：
+
+    ```bash
+    wc -l file//统计行数
+    wc -w file//统计单词数
+    wc -c file//统计字符数
+    ```
+
+- 特殊变量：NR、NF、$0、$1、$2
+
+- 磁盘管理（待更新）
+
+- 进程管理（待更新）
+
+- 性能监控（待更新）
+
+- 网络工具（待更新）
+
+  - 网络路由
+
+    - DNS查询，寻找域名对应的IP
+
+      ```bash
+      host github.com
+      ```
+      
+      
+
+- 用户管理
+
+  - 用户
+
+    - 添加用户
+  
+      ```bash
+      useradd username
+      ```
+    
+    - 设置密码
+    
+      ```bash
+      passwd username
+      ```
+    
+  - 删除用户
+    
+      ```bash
+      userdel -r username
+      ```
+    
+    - 切换用户
+    
+      ```bash
+      su userB
+      ```
+    
+  - 用户的组
+    
+    - 查看当前所属的组
+    
+        ```bash
+        group
+        ```
+        
+    - 将用户加入到组
+      
+      ```bash
+      usermode -G groupname username
+      ```
+      
+    - 更变用户的组（从原有的组删除）
+      
+      ```bash
+      usermode -g groupname username
+      ```
+    
+  - 用户权限
+  
+      - 更改读写权限
+  
+          ```bash
+          chmod 740 main	将main的用户权限设置为rwxr--
+          ```
+          
+      - 更改文件或目录的拥有者
+        
+        ```bash
+        chown -R username dirFile    -R表示递归选项
+        ```
+  
+- 系统管理
+
+  - 查询系统版本
+
+    ```bash
+    uname -a
+    ```
+    
+  - 查询CPU信息：
+    
+    ```bash
+    sar -u 5 10		5s更新一次，共10条数据
+    ```
+    
+  - 查看内存信息
+  
+    ```bash
+    cat /proc/meminfo
+    ```
+- IPC资源管理（待更新）
+  
