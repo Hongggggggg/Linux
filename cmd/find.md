@@ -62,42 +62,66 @@
   
 - 示例:
 
-  - 查找指定时间内修改过的文件：
+  -  name选项：
 
-    ```bash
+    - 在当前目录查找以.txt结尾的文件
+    
+      ```bash
+      find . -name "*.txt"
+      ```
+      
+    - 在当前目录及子目录中查找以大写字母开头的文件
+    
+      ```bash
+    find . -name "[A-Z]*"
+      ```
+  
+  - perm 选项：
+  
+    - 按照目录或文件的权限来查找文件：
+  
+      ```bash
+    find . -perm 777
+      ```
+    
+  - 查找指定时间内修改过的文件：
+  
+  ```bash
     find -atime -2	#查找48h内修改过的文件
     ```
     
-  - 在当前目录查找以.txt结尾的文件：
-    
-    ```bash
-    find . -name "*.txt"
-    ```
-
-  - 按照目录或文件的权限来查找文件：
-
-    ```bash
-    find . -perm 777
-    ```
-
   - 按类型查找文件：
 
     ```bash
     find . -type f -name ".txt" #在当前目录查找.txt结尾的普通文件
     ```
-  - 查找当前所有目录并排序：
-
+    
+- 查找当前所有目录并排序：
+  
     ```bash
     find . -type d|sort
     ```
+  
   - 按大小查找文件：
-
+  
     ```bash
     find . -size +1000c -print	#查找当前目录大于1k的文件
+  ```
+    
+  - 忽略某个目录：
+  
+    ```bash
+  find test -path "test/test1" -prune #查找test下所有文件，忽略test/test1
     ```
-
-
-
+    
+  - 按文件属主查找文件：
+  
+    ```bash
+    find ~ -user hammer #查找属主为hammer的文件
+    ```
+    
+    
+  
 - find exec:
 
   -exec 参数后面跟的是command命令，它的终止是以；为结束标志的，所以这句命令后面的分号是不可或缺的，考虑到各个系统中会有不同的意义，所以前面加反斜杠。
