@@ -62,37 +62,100 @@
   
 - 示例:
 
-  - 查找指定时间内修改过的文件：
+  -  name选项：
 
-    ```bash
+    - 在当前目录查找以.txt结尾的文件
+    
+      ```bash
+      find . -name "*.txt"
+      ```
+      
+    - 在当前目录及子目录中查找以大写字母开头的文件
+    
+      ```bash
+    find . -name "[A-Z]*"
+      ```
+  
+  - perm 选项：
+  
+    - 按照目录或文件的权限来查找文件：
+  
+      ```bash
+    find . -perm 777
+      ```
+    
+  - 查找指定时间内修改过的文件：
+  
+  ```bash
     find -atime -2	#查找48h内修改过的文件
     ```
     
-  - 在当前目录查找以.txt结尾的文件：
-    
-    ```bash
-    find . -name "*.txt"
-    ```
-
-  - 按照目录或文件的权限来查找文件：
-
-    ```bash
-    find . -perm 777
-    ```
-
   - 按类型查找文件：
 
     ```bash
     find . -type f -name ".txt" #在当前目录查找.txt结尾的普通文件
     ```
-  - 查找当前所有目录并排序：
-
+    
+- 查找当前所有目录并排序：
+  
     ```bash
     find . -type d|sort
     ```
+  
   - 按大小查找文件：
-
+  
     ```bash
     find . -size +1000c -print	#查找当前目录大于1k的文件
+  ```
+    
+  - 忽略某个目录：
+  
+    ```bash
+  find test -path "test/test1" -prune #查找test下所有文件，忽略test/test1
+    ```
+    
+  - 按文件属主查找文件：
+  
+    ```bash
+    find ~ -user hammer #查找属主为hammer的文件
+    ```
+    
+    
+  
+- find exec:
+
+  -exec 参数后面跟的是command命令，它的终止是以；为结束标志的，所以这句命令后面的分号是不可或缺的，考虑到各个系统中会有不同的意义，所以前面加反斜杠。
+
+  {} 花括号代表前面find找出来的文件名。
+
+  使用find时，只要把想要的操作写在一个文件里，就可以用exec来配合find查找。
+
+  exec选项后面跟随着所要执行的命令或脚本，然后是一对儿{ }，一个空格和一个\，最后是一个分号。为了使用exec选项，必须要同时使用print选项
+
+  - ls -l  命令放在find命令的-exec选项中
+
+    ```bash
+    find . -type f -exec ls -l {} \; #匹配当前目录下的所有普通文件，并在-exec选项中使用ls -l命令将它们列出
     ```
 
+  - 在目录中查找更改时间在n日以前的文件并删除它们
+
+    ```bash
+    find . -type f -mtime +14 -exec rm {} \;
+    ```
+  - -exec中使用grep命令
+
+    ```bash
+    find /etc -name "passwd*" -exec grep "root" {} \; #find命令首先匹配所有文件名为“ passwd*”的文件，例如passwd、passwd.old、passwd.bak，然后执行grep命令看看在这些文件中是否存在一个root用户。
+    ```
+    
+  - 查找文件移动到指定目录
+
+    ```bash
+    find . -name "*.log" -exec mv {} .. \;
+    ```
+  - 用exec选项执行cp命令
+
+    ```bash
+    find . -name "*log" -exec cp {} test \; 
+    ```
