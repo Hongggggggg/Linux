@@ -65,3 +65,28 @@
     ```
 
     
+  
+- 保留地址：
+
+  ​	将某些IP保留并与MAC地址绑定，当有设备申请IP时，根据MAC地址匹配，将对应的IP分给它，以此来保证每次向DHCP服务器请求IP地址的时候不会改变IP。可以通过修改DHCP服务器中的租约文件，来设置保留地址。
+
+  实现方式：
+
+  ​	在配置文件/etc/dhcp/dhcpd.conf末尾添加以下内容
+  ​		host print {         
+  ​			hardware ethernet 00:0C:29:1A:F8:C7;
+  ​			fixed-address 192.168.11.252;
+  ​		}
+
+  host print    host为指令，print是个随意设置的名字。
+  hardware ethernet 指定以太网网卡MAC地址。
+  fixed-address 指定要绑定的IP。
+  当MAC地址为00:0C:29:1A:F8:C7的设备来获取IP地址的时候,就会将192.168.11.252这个IP地址分配给它
+
+  
+
+- 超级作用域
+
+  将两个或两个以上的不同网段的作用域合成的一个作用域就叫做超级作用域。
+
+  
