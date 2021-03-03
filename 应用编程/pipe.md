@@ -12,29 +12,78 @@
 
 - 示例：
 
-  - 创建管道
+  - 创建无名管道
 
     ```c
-    #include <stdio.h>
-    #include <unistd.h>
-    
-    int main(int argc, char argv[])
+    static void pipe_test(void)
     {
         int pipe_fd[2];
-        if(pipe(pipe_fd) < 0)
+        char rcv_buf[50] = {0};
+        if (pipe(pipe_fd) < 0)
         {
             printf("create pipe failed\r\n");
-            return -1;
+            return;
         }
         else
         {
-            printf("create pipe sucess\r\n");
+            printf("create pipe success\r\n");
         }
+        char str[] = {"hello world"};
+        write(pipe_fd[1], &str, sizeof(str));
+        read(pipe_fd[0], rcv_buf, 50);
+        printf("read: %s\r\n", rcv_buf);
+    
         close(pipe_fd[0]);
         close(pipe_fd[1]);
-        return 1;
     }
-    /*创建两个文件描述符fd[0]和fd[1]，分别对应读管道和写管道*/
+/*创建两个文件描述符pipe_fd[0]和pipe_fd[1]，分别对应读管道和写管道*/
     ```
-
     
+  - 无名管道进程通信：
+  
+    ```c
+    static void pipe_test(void)
+    {
+        int pipe_fd[2];
+        char buf[100] = {0};
+        pid_t pid;
+        int readNum = 0, writeNum = 0;
+        if (pipe(pipe_fd) < 0)
+        {
+            printf("create pipe failed\r\n");
+            exit(1);
+        }
+        else
+        {
+            printf("create pipe success\r\n");
+        }
+        const char str[] = {"hello world"};
+        write(pipe_fd[1], &str, sizeof(str));
+        read(pipe_fd[0], buf, 100);
+        printf("read: %s\r\n", buf);
+    
+        if((pid = fork()) == 0)/*子进程*/
+        {
+            sleep(3);
+            if((readNum = read(pipe_fd[0], buf, 100)) > 0)
+            {
+                printf("%d bytes read: %s\r\n", readNum, buf);
+            }
+            close(pipe_fd[0]);
+            exit(0);
+        }
+        else if(pid > 0)
+        {
+            if((writeNum = write(pipe_fd[1], str, strlen(str))) != -1)
+            {
+                printf("write %d bytes: %s\r\n", writeNum, str);
+            }
+            close(pipe_fd[1]);
+            waitpid(pid, NULL, 0);
+            exit(0);
+        }
+    }
+    ```
+  
+    进程一旦fork以后，相应的用户空间会复制一份，同样对于文件描述符也是一样的，我们可以关闭父进程读和子进程的写即可实现从父进程到子进程的通信，同理我们可以关闭父进程写和子进程的读即可实现从子进程到父进程的通信。
+
