@@ -86,4 +86,57 @@
     ```
   
     进程一旦fork以后，相应的用户空间会复制一份，同样对于文件描述符也是一样的，我们可以关闭父进程读和子进程的写即可实现从父进程到子进程的通信，同理我们可以关闭父进程写和子进程的读即可实现从子进程到父进程的通信。
-
+    
+  - 写有名管道：
+  
+    ```c
+    static void pipe_write(int argc, char** argv)
+    {
+    	int fd;
+    	char buf[50];
+    	fd = open("./myfifo", O_WRONLY|O_NONBLOCK, 0);
+    
+    	strcpy(buf ,argv[1]);
+    	if(write(fd, buf, 50) == -1)
+    	{
+    		if(errno == EAGAIN)
+    			printf("ERROR\r\n");
+    	}
+    	else
+    	{
+    		printf("write %s\r\n", buf);
+    	}
+    }
+    ```
+  
+  - 读有名管道：
+  
+    ```c
+    static void pipe_read(int argc, char** argv)
+    {
+    	char buf[50];
+    	int fd;
+    	int nread;
+    
+    	if((mkfifo("./myfifo", O_CREAT|O_EXCL) < 0) && (errno != EEXIST))
+    	{
+    		printf("cannot create fifo\r\n");
+    	}	
+    	memset(buf, 0, sizeof(buf));
+    	fd = open("./myfifo", O_RDONLY|O_NONBLOCK, 0);
+    
+    	while(1)
+    	{
+    		memset(buf, 0, sizeof(buf));
+    		if(read(fd, buf, 100) == -1)
+    		{
+    			if(errno == EAGAIN)
+    				printf("error\r\n");
+    		}
+    		printf("read %s from FIFO\n", buf);
+    		sleep(1);
+    	}
+    }
+    ```
+  
+    
